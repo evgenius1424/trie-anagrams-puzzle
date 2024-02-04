@@ -1,4 +1,4 @@
-package com.glinevg.subanagram.model;
+package com.github.evgenius1424.anagram.model;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

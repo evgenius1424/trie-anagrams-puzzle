@@ -1,7 +1,6 @@
-package com.glinevg.subanagram.model.trie;
+package com.github.evgenius1424.anagram.model.trie;
 
-import com.glinevg.subanagram.model.Word;
-import lombok.Value;
+import com.github.evgenius1424.anagram.model.Word;
 
 import java.util.Map.Entry;
 import java.util.Stack;
@@ -42,12 +41,12 @@ public class Trie {
             TrieNode node = stack.pop();
 
             for (Entry<TrieKey, TrieNode> entry : node.getChildren().entrySet()) {
-                char character = entry.getKey().getCharacter();
+                char character = entry.getKey().character();
                 if (character < minCharacter) {
                     stack.add(entry.getValue());
                 } else if (character > minCharacter) {
                     break;
-                } else if (entry.getKey().getCount() >= word.getCharacterCount(minCharacter)) {
+                } else if (entry.getKey().count() >= word.getCharacterCount(minCharacter)) {
                     if (doesMinWordCharacterNodeContainAnagram(entry, word)) {
                         return true;
                     }
@@ -58,9 +57,8 @@ public class Trie {
     }
 
     private static boolean doesMinWordCharacterNodeContainAnagram(Entry<TrieKey, TrieNode> minWordCharacterNode, Word word) {
-
         if (word.characters().size() == 1) {
-            return !isLastNodeAndContainsOnlyWord(minWordCharacterNode.getValue(), word);
+            return isLastNodeAndContainsOnlyWord(minWordCharacterNode.getValue(), word);
         }
 
         Stack<NextNodeSearchData> stack = new Stack<>();
@@ -68,16 +66,16 @@ public class Trie {
 
         while (!stack.isEmpty()) {
             NextNodeSearchData searcher = stack.pop();
-            for (Entry<TrieKey, TrieNode> entry : searcher.getNode().getValue().getChildren().entrySet()) {
-                char character = entry.getKey().getCharacter();
+            for (Entry<TrieKey, TrieNode> entry : searcher.node().getValue().getChildren().entrySet()) {
+                char character = entry.getKey().character();
                 if (character < searcher.character) {
                     stack.add(searcher.sameCharacter(entry));
                 } else if (character > searcher.character) {
                     break;
-                } else if (entry.getKey().getCount() >= searcher.count) {
+                } else if (entry.getKey().count() >= searcher.count) {
                     if (searcher.character.equals(word.getMaxCharacter())) {
 
-                        if (!isLastNodeAndContainsOnlyWord(entry.getValue(), word)) {
+                        if (isLastNodeAndContainsOnlyWord(entry.getValue(), word)) {
                             return true;
                         }
 
@@ -92,20 +90,14 @@ public class Trie {
     }
 
     private static boolean isLastNodeAndContainsOnlyWord(TrieNode node, Word word) {
-        return node.getChildren().size() == 0
-                && node.getWords().size() == 1
-                && node.getWords().contains(word);
+        return !node.getChildren().isEmpty()
+                || node.getWords().size() != 1
+                || !node.getWords().contains(word);
     }
 
-    @Value
-    private static class NextNodeSearchData {
-        Entry<TrieKey, TrieNode> node;
-        Word word;
-        Character character;
-        Integer count;
-
+    private record NextNodeSearchData(Entry<TrieKey, TrieNode> node, Word word, Character character, Integer count) {
         private static NextNodeSearchData start(Entry<TrieKey, TrieNode> node, Word word) {
-            Character nextCharacter = word.getNextCharacter(node.getKey().getCharacter());
+            Character nextCharacter = word.getNextCharacter(node.getKey().character());
             Integer nextCharacterCount = word.getCharacterCount(nextCharacter);
             return new NextNodeSearchData(node, word, nextCharacter, nextCharacterCount);
         }

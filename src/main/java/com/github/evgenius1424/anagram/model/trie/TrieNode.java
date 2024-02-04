@@ -1,6 +1,6 @@
-package com.glinevg.subanagram.model.trie;
+package com.github.evgenius1424.anagram.model.trie;
 
-import com.glinevg.subanagram.model.Word;
+import com.github.evgenius1424.anagram.model.Word;
 import lombok.Getter;
 
 import java.util.*;
@@ -10,8 +10,8 @@ import static java.util.Comparator.comparing;
 @Getter
 class TrieNode {
 
-    private static final Comparator<TrieKey> TRIE_KEY_COMPARATOR = comparing(TrieKey::getCharacter)
-            .thenComparing(TrieKey::getCount);
+    private static final Comparator<TrieKey> TRIE_KEY_COMPARATOR = comparing(TrieKey::character)
+            .thenComparing(TrieKey::count);
 
     private final SortedMap<TrieKey, TrieNode> children = new TreeMap<>(TRIE_KEY_COMPARATOR);
 

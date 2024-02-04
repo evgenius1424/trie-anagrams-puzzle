@@ -1,21 +1,26 @@
-import com.glinevg.subanagram.model.Word;
-import com.glinevg.subanagram.model.trie.Trie;
+import com.github.evgenius1424.anagram.model.Word;
+import com.github.evgenius1424.anagram.model.trie.Trie;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Stream;
 
-import static com.glinevg.subanagram.util.AnagramUtil.readDictionaryAndSkipLineIfNextStartWithCurrent;
-import static com.glinevg.subanagram.util.ResourceUtil.resource;
+import static com.github.evgenius1424.anagram.AnagramUtil.readDictionaryAndSkipLineIfNextStartWithCurrent;
+import static java.util.Objects.requireNonNull;
 import static java.util.function.Predicate.not;
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toSet;
 
 public class Main {
 
+    public static final String ENGLISH_DICTIONARY_RESOURCE = "english-dictionary.txt";
+
     public static void main(String[] args) throws IOException, URISyntaxException {
-        Path dictionary = resource("english-dictionary.txt");
+        Path dictionary = resource(ENGLISH_DICTIONARY_RESOURCE);
         SortedMap<String, Set<String>> wordsGroupedBySortedLetters = readDictionaryAndSkipLineIfNextStartWithCurrent(dictionary)
                 .collect(groupingBy(s -> s.chars()
                         .sorted()
@@ -26,14 +31,13 @@ public class Main {
         List<Word> words = removedSubAnagramsBasedOnNaturalOrderOfSortedLetters(wordsGroupedBySortedLetters)
                 .map(Word::new)
                 .peek(trie::insert)
-                .collect(toList());
+                .toList();
 
         long start = System.currentTimeMillis();
         long notAnagrams = words.parallelStream()
                 .filter(not(trie::isAnagramOrSubAnagram))
                 .count();
-        long finish = System.currentTimeMillis() - start;
-        System.out.println("Not anagrams #" + notAnagrams + " Elapsed: " + finish + "ms.");
+        System.out.println("Not anagrams" + notAnagrams + " Elapsed: " + (System.currentTimeMillis() - start) + "ms.");
     }
 
     private static Stream<String> removedSubAnagramsBasedOnNaturalOrderOfSortedLetters(SortedMap<String, Set<String>> words) {
@@ -52,5 +56,10 @@ public class Main {
         }
 
         return sb.build();
+    }
+
+    private static Path resource(String name) throws URISyntaxException {
+        URI uri = requireNonNull(Thread.currentThread().getContextClassLoader().getResource(name)).toURI();
+        return Paths.get(uri);
     }
 }

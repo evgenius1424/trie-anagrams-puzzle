@@ -1,15 +1,16 @@
-package com.glinevg.subanagram.model;
+package com.github.evgenius1424.anagram;
 
+import com.github.evgenius1424.anagram.model.Word;
 import org.junit.jupiter.api.Test;
 
 import java.util.AbstractMap.SimpleEntry;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class WordTest {
+public class WordTest {
 
     @Test
-    void getCharactersCountSortedByCharacterAsc() {
+    public void getCharactersCountSortedByCharacterAsc() {
         Word word = new Word("zoo");
 
         assertThat(word.characters()).containsExactly(

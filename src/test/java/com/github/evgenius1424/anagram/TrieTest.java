@@ -1,7 +1,7 @@
-package com.glinevg.subanagram.model.trie;
+package com.github.evgenius1424.anagram;
 
-import com.glinevg.subanagram.model.Word;
-import com.glinevg.subanagram.util.StringUtil;
+import com.github.evgenius1424.anagram.model.Word;
+import com.github.evgenius1424.anagram.model.trie.Trie;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
@@ -13,23 +13,23 @@ import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class TrieTest {
+public class TrieTest {
 
     @Test
-    void wordsContainedInTrie() {
+    public void wordsContainedInTrie() {
         Trie trie = new Trie();
 
         List<Word> words = Stream.of("dog", "dogma", "mississippi", "z")
                 .map(Word::new)
                 .peek(trie::insert)
-                .collect(toList());
+                .toList();
 
         words.forEach(w -> assertTrue(trie.contains(w)));
         assertThat(trie.contains(new Word("missing"))).isFalse();
     }
 
     @Test
-    void isSubAnagram() {
+    public void isSubAnagram() {
         Word parent = new Word("english");
         Word subAnagram = new Word("single");
 
@@ -57,7 +57,7 @@ class TrieTest {
     }
 
     @Test
-    void substringsPermutationsAreAnagramsAndSubAnagrams() {
+    public void substringsPermutationsAreAnagramsAndSubAnagrams() {
         Trie trie = new Trie();
 
         List<Word> anagramsAndSubAnagrams = Stream.of("peace", "door")
@@ -65,7 +65,7 @@ class TrieTest {
                 .flatMap(Collection::stream)
                 .map(Word::new)
                 .peek(trie::insert)
-                .collect(toList());
+                .toList();
 
         Word notSubAnagram = new Word("ball");
         trie.insert(notSubAnagram);

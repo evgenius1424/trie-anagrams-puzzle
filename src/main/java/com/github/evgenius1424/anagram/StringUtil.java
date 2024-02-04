@@ -1,4 +1,4 @@
-package com.glinevg.subanagram.util;
+package com.github.evgenius1424.anagram;
 
 import java.util.HashSet;
 import java.util.Set;

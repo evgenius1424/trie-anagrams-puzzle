@@ -1,4 +1,4 @@
-package com.glinevg.subanagram.util;
+package com.github.evgenius1424.anagram;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
