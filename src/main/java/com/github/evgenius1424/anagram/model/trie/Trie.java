@@ -56,7 +56,7 @@ public class Trie {
         return false;
     }
 
-    private static boolean doesMinWordCharacterNodeContainAnagram(Entry<TrieKey, TrieNode> minWordCharacterNode, Word word) {
+    private boolean doesMinWordCharacterNodeContainAnagram(Entry<TrieKey, TrieNode> minWordCharacterNode, Word word) {
         if (word.characters().size() == 1) {
             return isLastNodeAndContainsOnlyWord(minWordCharacterNode.getValue(), word);
         }
@@ -89,7 +89,7 @@ public class Trie {
         return false;
     }
 
-    private static boolean isLastNodeAndContainsOnlyWord(TrieNode node, Word word) {
+    private boolean isLastNodeAndContainsOnlyWord(TrieNode node, Word word) {
         return !node.getChildren().isEmpty()
                 || node.getWords().size() != 1
                 || !node.getWords().contains(word);
@@ -111,6 +111,5 @@ public class Trie {
             Integer nextCharacterCount = word.getCharacterCount(nextCharacter);
             return new NextNodeSearchData(node, word, nextCharacter, nextCharacterCount);
         }
-
     }
 }

@@ -37,7 +37,7 @@ public class Main {
         long notAnagrams = words.parallelStream()
                 .filter(not(trie::isAnagramOrSubAnagram))
                 .count();
-        System.out.println("Not anagrams" + notAnagrams + " Elapsed: " + (System.currentTimeMillis() - start) + "ms.");
+        System.out.println("Not anagrams " + notAnagrams + " Elapsed: " + (System.currentTimeMillis() - start) + "ms.");
     }
 
     private static Stream<String> removedSubAnagramsBasedOnNaturalOrderOfSortedLetters(SortedMap<String, Set<String>> words) {
