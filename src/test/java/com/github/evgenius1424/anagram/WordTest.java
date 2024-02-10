@@ -1,6 +1,5 @@
 package com.github.evgenius1424.anagram;
 
-import com.github.evgenius1424.anagram.model.Word;
 import org.junit.jupiter.api.Test;
 
 import java.util.AbstractMap.SimpleEntry;

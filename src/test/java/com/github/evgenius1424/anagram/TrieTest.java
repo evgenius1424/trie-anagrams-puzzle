@@ -1,7 +1,6 @@
 package com.github.evgenius1424.anagram;
 
-import com.github.evgenius1424.anagram.model.Word;
-import com.github.evgenius1424.anagram.model.trie.Trie;
+import com.github.evgenius1424.anagram.helper.PermutationsHelper;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
@@ -29,6 +28,20 @@ public class TrieTest {
     }
 
     @Test
+    public void isAnagram() {
+        Word a1 = new Word("abc");
+        Word a2 = new Word("cba");
+
+        Trie trie = new Trie();
+
+        trie.insert(a1);
+        trie.insert(a2);
+
+        assertThat(trie.isAnagramOrSubAnagram(a1)).isTrue();
+        assertThat(trie.isAnagramOrSubAnagram(a2)).isTrue();
+    }
+
+    @Test
     public void isSubAnagram() {
         Word parent = new Word("english");
         Word subAnagram = new Word("single");
@@ -43,25 +56,11 @@ public class TrieTest {
     }
 
     @Test
-    void isAnagram() {
-        Word a1 = new Word("abc");
-        Word a2 = new Word("cba");
-
-        Trie trie = new Trie();
-
-        trie.insert(a1);
-        trie.insert(a2);
-
-        assertThat(trie.isAnagramOrSubAnagram(a1)).isTrue();
-        assertThat(trie.isAnagramOrSubAnagram(a2)).isTrue();
-    }
-
-    @Test
     public void substringsPermutationsAreAnagramsAndSubAnagrams() {
         Trie trie = new Trie();
 
         List<Word> anagramsAndSubAnagrams = Stream.of("peace", "door")
-                .map(StringUtil::substringsPermutations)
+                .map(PermutationsHelper::substringsPermutations)
                 .flatMap(Collection::stream)
                 .map(Word::new)
                 .peek(trie::insert)

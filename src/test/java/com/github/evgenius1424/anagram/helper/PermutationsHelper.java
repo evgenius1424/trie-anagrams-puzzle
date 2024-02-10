@@ -1,9 +1,9 @@
-package com.github.evgenius1424.anagram;
+package com.github.evgenius1424.anagram.helper;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public class StringUtil {
+public class PermutationsHelper {
 
     public static Set<String> substringsPermutations(String string) {
         Set<String> set = new HashSet<>();

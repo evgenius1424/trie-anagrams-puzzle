@@ -1,4 +1,4 @@
-package com.github.evgenius1424.anagram.model;
+package com.github.evgenius1424.anagram;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -10,6 +10,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 public class Word {
 
     @ToString.Include
