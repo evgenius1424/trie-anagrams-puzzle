@@ -2,14 +2,33 @@ package com.github.evgenius1424.anagram;
 
 import java.util.*;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import static java.util.Comparator.comparing;
+import static java.util.function.Predicate.not;
 
-public class Trie {
+public class TrieAnagramsRemoval {
 
+    private final Set<String> words;
     private final TrieNode root = new TrieNode();
 
-    public void insert(Word word) {
+    public TrieAnagramsRemoval(Set<String> words) {
+        this.words = words;
+    }
+
+    public Set<String> getNotAnagrams() {
+        List<Word> wordsInTrie = words.stream()
+                .map(Word::new)
+                .peek(this::insert)
+                .toList();
+
+        return wordsInTrie.parallelStream()
+                .filter(not(this::isAnagramOrSubAnagram))
+                .map(Word::getSource)
+                .collect(Collectors.toSet());
+    }
+
+    private void insert(Word word) {
         TrieNode current = root;
         for (Entry<Character, Integer> entry : word.characters()) {
             TrieKey key = TrieKey.from(entry);
@@ -18,7 +37,7 @@ public class Trie {
         current.words.add(word);
     }
 
-    public boolean contains(Word word) {
+    private boolean contains(Word word) {
         TrieNode current = root;
 
         for (Entry<Character, Integer> entry : word.characters()) {
@@ -32,7 +51,7 @@ public class Trie {
         return current.words.contains(word);
     }
 
-    public boolean isAnagramOrSubAnagram(Word word) {
+    private boolean isAnagramOrSubAnagram(Word word) {
         Character minCharacter = word.getMinCharacter();
 
         Deque<TrieNode> stack = new LinkedList<>();
@@ -96,7 +115,71 @@ public class Trie {
                 || !node.words.contains(word);
     }
 
-    private record NextNodeSearchData(Entry<TrieKey, TrieNode> node, Word word, Character character, Integer count) {
+    private static class Word {
+        private final String source;
+        private final SortedMap<Character, Integer> charactersCount;
+
+        public Word(String source) {
+            this.source = source;
+            this.charactersCount = charactersCount(source);
+        }
+
+        public String getSource() {
+            return source;
+        }
+
+        public Character getNextCharacter(Character character) {
+            return charactersCount.keySet().stream().filter(ch -> ch > character)
+                    .findFirst()
+                    .orElseThrow();
+        }
+
+        public Character getMinCharacter() {
+            return charactersCount.firstKey();
+        }
+
+        public Character getMaxCharacter() {
+            return charactersCount.lastKey();
+        }
+
+        public Integer getCharacterCount(Character character) {
+            return charactersCount.get(character);
+        }
+
+        public Set<Entry<Character, Integer>> characters() {
+            return charactersCount.entrySet();
+        }
+
+        private SortedMap<Character, Integer> charactersCount(String word) {
+            SortedMap<Character, Integer> map = new TreeMap<>();
+
+            for (int i = 0; i < word.length(); i++) {
+                map.compute(word.charAt(i), (k, v) -> v == null ? 1 : v + 1);
+            }
+
+            return map;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) return true;
+            if (obj == null || getClass() != obj.getClass()) return false;
+            Word word = (Word) obj;
+            return Objects.equals(source, word.source);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hashCode(source);
+        }
+
+        @Override
+        public String toString() {
+            return source;
+        }
+    }
+
+    private static record NextNodeSearchData(Entry<TrieKey, TrieNode> node, Word word, Character character, Integer count) {
         private static NextNodeSearchData start(Entry<TrieKey, TrieNode> node, Word word) {
             Character nextCharacter = word.getNextCharacter(node.getKey().character());
             Integer nextCharacterCount = word.getCharacterCount(nextCharacter);
@@ -115,14 +198,12 @@ public class Trie {
     }
 
     private static class TrieNode {
-
         private final SortedMap<TrieKey, TrieNode> children = new TreeMap<>(comparing(TrieKey::character)
                 .thenComparing(TrieKey::count));
-
         private final Set<Word> words = new HashSet<>();
     }
 
-    private record TrieKey(char character, int count) {
+    private static record TrieKey(char character, int count) {
         public static TrieKey from(Entry<Character, Integer> entry) {
             return new TrieKey(entry.getKey(), entry.getValue());
         }

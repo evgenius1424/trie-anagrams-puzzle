@@ -2,13 +2,16 @@
 
 ## Problem Statement
 
-The challenge is to determine the number of words that remain in the Russian/English (or any other language) language dictionary after removing all anagrams and subanagrams. 
+The challenge is to determine the number of words that remain in the Russian/English (or any other language) language
+dictionary after removing all anagrams and subanagrams.
 The russian dictionary contains over 1.5 million words in various forms.
 
 ## Approach
 
-The proposed solution involves the use of a Trie data structure to efficiently search for anagrams and subanagrams in the dictionary. 
-The Trie is constructed by adding each word to the tree, where each node contains a letter and its count in the word. Nodes are sorted alphabetically and by letter frequency in the word.
+The proposed solution involves the use of a Trie data structure to efficiently search for anagrams and subanagrams in
+the dictionary.
+The Trie is constructed by adding each word to the tree, where each node contains a letter and its count in the word.
+Nodes are sorted alphabetically and by letter frequency in the word.
 
 Algorithm (simplified):
 

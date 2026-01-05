@@ -15,9 +15,9 @@ import static java.util.Objects.requireNonNull;
 public class Main {
 
     public static void main(String[] args) throws IOException, URISyntaxException {
-        Dictionary englishDictionary = new Dictionary(getDictionary("english-dictionary.txt"));
+        TrieAnagramsRemoval englishDictionary = new TrieAnagramsRemoval(getDictionary("english-dictionary.txt"));
         long start = System.currentTimeMillis();
-        Set<String> notAnagramsEnglish = englishDictionary.getNotAnagrams();
+        var notAnagramsEnglish = englishDictionary.getNotAnagrams();
         System.out.printf("English not-anagrams %d. Elapsed: %dms.%n", notAnagramsEnglish.size(), System.currentTimeMillis() - start);
     }
 
